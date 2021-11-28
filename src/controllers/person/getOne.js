@@ -1,4 +1,4 @@
-const { v4: uuidV4, validate: uuidValidate } = require("uuid")
+const { validate: uuidValidate } = require("uuid")
 
 module.exports = (request, response) => {
   const id = request.url.split("/").pop()
