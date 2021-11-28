@@ -1,4 +1,4 @@
-const { v4: uuidV4, validate: uuidValidate } = require("uuid")
+const { validate: uuidValidate } = require("uuid")
 
 module.exports = (request, response) => {
   const id = request.url.split("/").pop()
@@ -6,7 +6,7 @@ module.exports = (request, response) => {
   if (uuidValidate(id)) {
     const index = request.person.findIndex((item) => item.id === id)
 
-    if (index) {
+    if (index > -1) {
       if (request.body.hasOwnProperty("id")) {
         response.writeHead(400, { "Content-Type": "application/json" })
         response.end("The body must not contain any ID")
@@ -39,6 +39,9 @@ module.exports = (request, response) => {
         })
         response.end(JSON.stringify(request.person[index]))
       }
+    } else {
+      response.writeHead(404, { "Content-Type": "application/json" })
+      response.end(`User with id:${id} not found`)
     }
   } else {
     response.writeHead(400, { "Content-Type": "application/json" })
