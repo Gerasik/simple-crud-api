@@ -1,16 +1,11 @@
-module.exports = (request, response) => {
-  switch (request.url) {
-    case "/person":
-      response.statusCode = 200
-      response.setHeader("Content-Type", "application/json")
-      response.write(JSON.stringify(request.person))
-      response.end()
-      break
+const { person, shared } = require("../controllers")
 
-    // response for unexpected get requests
-    default:
-      response.statusCode = 400
-      response.write(`CANNOT GET ${request.url}`)
-      response.end()
+module.exports = (request, response) => {
+  if (request.url === "/person") {
+    person.getAll(request, response)
+  } else if (/\/person\/[0-9a-z\-]+/g.test(request.url)) {
+    person.getOne(request, response)
+  } else {
+    shared.noValidRoute(request, response)
   }
 }
